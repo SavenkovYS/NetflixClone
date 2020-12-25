@@ -1,5 +1,5 @@
 import React from 'react';
-import {Item, Inner, Container} from './styles/jumbotron.js'
+import {Item, Inner, Container, Title, Subtitle, Image} from './styles/jumbotron.js'
 
 export default function Jumbotron({ childere, direction = 'row', ...restProps }) {
     return (
@@ -11,4 +11,16 @@ export default function Jumbotron({ childere, direction = 'row', ...restProps })
 
 Jumbotron.Container = function JumbotronContainer({ children, ...restProps }) {
     return <Container {...restProps}>{children}</Container>
+}
+
+Jumbotron.Title = function JumbotronTitle({ children, ...restProps }) {
+    return <Title {...restProps}>{children}</Title>
+}
+
+Jumbotron.Subtitle = function JumbotronSubtitle({ children, ...restProps }) {
+    return <Subtitle {...restProps}>{children}</Subtitle>
+}
+
+Jumbotron.Image = function JumbotronImage({ children, ...restProps }) {
+    return <Image {...restProps} />
 }
