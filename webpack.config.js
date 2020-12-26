@@ -61,6 +61,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 module.exports = {
   plugins: [
@@ -73,8 +74,9 @@ module.exports = {
     new HtmlWebpackPlugin({
         template: "./public/index.html"
     }),
+    new ReactRefreshWebpackPlugin()
   ],
-  entry: path.resolve(__dirname, 'docs', 'index.js'),
+  entry: ['react-hot-loader/patch', './docs/index.js'],
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js'

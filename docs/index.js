@@ -1,3 +1,6 @@
+if (module.hot) module.hot.accept()
+
+import 'react-hot-loader';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -11,3 +14,4 @@ ReactDOM.render(
     </>, 
     document.getElementById('root')
 );
+
