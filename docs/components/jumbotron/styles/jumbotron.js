@@ -14,11 +14,38 @@ export const Inner = styled.div`
     }
 `;
 
-export const Item = styled.div`
-    display: flex;
+export const Pane = styled.div`
+    width: 100%;
+    padding: 0 45px;
+    text-align: center;
+
+    @media (min-width: 1000px) {
+        width: 50%;
+        padding: 0;
+        text-align: left;
+    }
 `;
 
-export const Container = styled.section``;
+export const Item = styled.div`
+    display: flex;
+    border-bottom: 8px solid #222;
+    padding: 50px 5%;
+    color: #fff;
+    overflow: hidden;
+`;
+
+export const Container = styled.section`
+    background-color: #000;
+    ${Item}:last-of-type p {
+        margin-bottom: 50px;
+    }
+
+    @media (min-width: 1000px) {
+        ${Item}:last-of-type p {
+            margin-bottom: 0;
+        }
+    }
+`;
 
 export const Title = styled.h2`
     font-size: 35px;

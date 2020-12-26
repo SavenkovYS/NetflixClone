@@ -60,12 +60,18 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: "public", to: "public" },
+      ],
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-        template: "./docs/index.html"
+        template: "./public/index.html"
     }),
   ],
   entry: path.resolve(__dirname, 'docs', 'index.js'),
@@ -82,6 +88,20 @@ module.exports = {
   },
   module: {
     rules: [
+      
+      {
+        test: /\.(jpg|png)$/,
+        use: {
+          loader: 'url-loader',
+        }
+      },
+      {
+          test: /\.(png|jpg|svg|gif)$/,
+          loader: 'file-loader',
+          options: {
+            publicPath: './public'
+          }
+      },
       {
         test: /\.(jsx|js)$/,
         include: path.resolve(__dirname, 'docs'),
