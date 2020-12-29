@@ -1,124 +1,257 @@
 // const path = require('path');
+// const webpack = require('webpack');
 // const HtmlWebpackPlugin = require('html-webpack-plugin');
 // const CopyWebpackPlugin = require('copy-webpack-plugin');
-// const {CleanWebpackPlugin} = require('clean-webpack-plugin');
-// const TerserPlugin = require("terser-webpack-plugin");
+// const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 // module.exports = {
-//     entry: {
-//         main: ['@babel/polyfill', './docs/index.js']
+//   plugins: [
+//     new CopyWebpackPlugin({
+//       patterns: [
+//         { from: "public", to: "public" },
+//       ],
+//     }),
+//     new webpack.HotModuleReplacementPlugin(),
+//     new HtmlWebpackPlugin({
+//         template: "./public/index.html"
+//     }),
+//     new ReactRefreshWebpackPlugin()
+//   ],
+//   entry: ['react-hot-loader/patch', './docs/index.js'],
+//   output: {
+//     path: path.resolve(__dirname, 'dist'),
+//     filename: 'bundle.js'
+//   },
+//   resolve: {
+//     alias: {
+//       'react-dom': '@hot-loader/react-dom'
+//     }
+//   },
+//   devServer: {
+//     contentBase: "./docs",
+//     open: true,
+//     clientLogLevel: 'silent',
+//     port: 9000,
+//     hot: true
+//   },
+//   module: {
+//     rules: [
+      
+//       {
+//         test: /\.(jpg|png)$/,
+//         use: {
+//           loader: 'url-loader',
+//         }
 //       },
-//     output: {
-//         filename: 'bundle.js',
-//         path: path.resolve(__dirname, 'dist')
-//     },
-//     optimization: {
-//         minimize: true,
-//         minimizer: [new TerserPlugin()],
-//     },
-//     devServer: {
-//         hot: true,
-//         contentBase: './docs'
-
-//     },
-//     module: {
-//         rules: [
-//             {
-//                 test: /\.(png|jpg|svg|gif)$/,
-//                 use: ['file-loader']
-//             },
-//             {
-//                 test: /\.js$/,
-//                 include: path.resolve(__dirname, 'docs'),
-//                 exclude: /(node_modules)/,
-//                 use: {
-//                     loader: 'babel-loader',
-//                     options: {
-//                         presets: ['@babel/preset-env', '@babel/preset-react'],
-//                     }
-//                 }
-//             }
-//         ]
-//     },
-//     plugins: [
-//                 new HtmlWebpackPlugin({
-//                     template: "./docs/index.html"
-//                 }),
-//                 new CleanWebpackPlugin(),
-//                 new CopyWebpackPlugin({
-//                     patterns: [
-//                         {
-//                             from: path.resolve(__dirname, 'docs'),
-//                             to: path.resolve(__dirname, 'dist')
-//                         }
-//                     ],
-//                 }),
-                
+//       {
+//           test: /\.(png|jpg|svg|gif)$/,
+//           loader: 'file-loader',
+//           options: {
+//             publicPath: './public'
+//           }
+//       },
+//       {
+//         test: /\.(jsx|js)$/,
+//         include: path.resolve(__dirname, 'docs'),
+//         exclude: /node_modules/,
+//         use: [{
+//           loader: 'babel-loader',
+//           options: {
+//             presets: [
+//               ['@babel/preset-env', {
+//                 "targets": "defaults" 
+//               }],
+//               '@babel/preset-react'
 //             ]
-// };
+//           }
+//         }]
+//       }
+//     ]
+//   }
+// }
 
-const path = require('path');
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const path = require('path')
+const HTMLWebpackPlugin = require('html-webpack-plugin')
+const {CleanWebpackPlugin} = require('clean-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCssAssetWebpackPlugin = require('optimize-css-assets-webpack-plugin')
+const TerserWebpackPlugin = require('terser-webpack-plugin')
+const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer')
+
+const isDev = process.env.NODE_ENV === 'development'
+const isProd = !isDev
+
+const optimization = () => {
+  const config = {
+    splitChunks: {
+      chunks: 'all'
+    }
+  }
+
+  if (isProd) {
+    config.minimizer = [
+      new OptimizeCssAssetWebpackPlugin(),
+      new TerserWebpackPlugin()
+    ]
+  }
+
+  return config
+}
+
+const filename = ext => isDev ? `[name].${ext}` : `[name].[hash].${ext}`
+
+const cssLoaders = extra => {
+  const loaders = [
+    {
+      loader: MiniCssExtractPlugin.loader,
+      options: {
+        hmr: isDev,
+        reloadAll: true
+      },
+    },
+    'css-loader'
+  ]
+
+  if (extra) {
+    loaders.push(extra)
+  }
+
+  return loaders
+}
+
+const babelOptions = preset => {
+  const opts = {
+    presets: [
+      '@babel/preset-env'
+    ],
+    plugins: [
+      '@babel/plugin-proposal-class-properties'
+    ]
+  }
+
+  if (preset) {
+    opts.presets.push(preset)
+  }
+
+  return opts
+}
+
+
+const jsLoaders = () => {
+  const loaders = [{
+    loader: 'babel-loader',
+    options: babelOptions()
+  }]
+
+  if (isDev) {
+    loaders.push('eslint-loader')
+  }
+
+  return loaders
+}
+
+const plugins = () => {
+  const base = [
+    new HTMLWebpackPlugin({
+      template: './public/index.html',
+      minify: {
+        collapseWhitespace: isProd
+      }
+    }),
+    new CleanWebpackPlugin(),
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, 'public/'),
+        to: path.resolve(__dirname, 'dist/public')
+      }
+    ]),
+    new MiniCssExtractPlugin({
+      filename: filename('css')
+    })
+  ]
+
+  if (isProd) {
+    base.push(new BundleAnalyzerPlugin())
+  }
+
+  return base
+}
 
 module.exports = {
-  plugins: [
-    new CopyWebpackPlugin({
-      patterns: [
-        { from: "public", to: "public" },
-      ],
-    }),
-    new webpack.HotModuleReplacementPlugin(),
-    new HtmlWebpackPlugin({
-        template: "./public/index.html"
-    }),
-    new ReactRefreshWebpackPlugin()
-  ],
-  entry: ['react-hot-loader/patch', './docs/index.js'],
+  mode: 'development',
+  entry: {
+    main: ['@babel/polyfill', './docs/index.js'],
+  },
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    filename: filename('js'),
+    path: path.resolve(__dirname, 'dist')
   },
+  resolve: {
+    extensions: ['.js', '.json', '.png'],
+    alias: {
+      '@models': path.resolve(__dirname, 'docs/models'),
+      '@': path.resolve(__dirname, 'docs'),
+    }
+  },
+  optimization: optimization(),
   devServer: {
-    contentBase: "./docs",
-    open: true,
-    clientLogLevel: 'silent',
-    port: 9000,
-    hot: true
+    port: 4200,
+    hot: isDev,
+    historyApiFallback: true
   },
+  devtool: isDev ? 'source-map' : '',
+  plugins: plugins(),
   module: {
     rules: [
-      
       {
-        test: /\.(jpg|png)$/,
-        use: {
-          loader: 'url-loader',
+        test: /\.css$/,
+        use: cssLoaders()
+      },
+      {
+        test: /\.less$/,
+        use: cssLoaders('less-loader')
+      },
+      {
+        test: /\.s[ac]ss$/,
+        use: cssLoaders('sass-loader')
+      },
+      {
+        test: /\.(png|jpg|svg|gif)$/,
+        use: ['file-loader']
+      },
+      {
+        test: /\.(ttf|woff|woff2|eot)$/,
+        use: ['file-loader']
+      },
+      {
+        test: /\.xml$/,
+        use: ['xml-loader']
+      },
+      {
+        test: /\.csv$/,
+        use: ['csv-loader']
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: jsLoaders()
+      },
+      {
+        test: /\.ts$/,
+        exclude: /node_modules/,
+        loader: {
+          loader: 'babel-loader',
+          options: babelOptions('@babel/preset-typescript')
         }
       },
       {
-          test: /\.(png|jpg|svg|gif)$/,
-          loader: 'file-loader',
-          options: {
-            publicPath: './public'
-          }
-      },
-      {
-        test: /\.(jsx|js)$/,
-        include: path.resolve(__dirname, 'docs'),
+        test: /\.jsx$/,
         exclude: /node_modules/,
-        use: [{
+        loader: {
           loader: 'babel-loader',
-          options: {
-            presets: [
-              ['@babel/preset-env', {
-                "targets": "defaults" 
-              }],
-              '@babel/preset-react'
-            ]
-          }
-        }]
+          options: babelOptions('@babel/preset-react')
+        }
       }
     ]
   }
