@@ -1,9 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Firebase from 'firebase/app'
+import 'firebase/firestore'
+import 'firebase/auth'
 
 import App from './App.js';
 import { GlobalStyles } from './global-styles';
 import { FirebaseContext } from './context/firebase.js';
+
+import { seedDatabase } from './seed';
 
 const config = {
     apiKey: "AIzaSyCNQ5d0BfpML-bzEngvycxxjLxlRtlv4xU",
@@ -16,7 +21,9 @@ const config = {
     measurementId: "G-4V50JEN99Z"
 }
 
-const firebase = window.firebase.initializeApp(config);
+const firebase = Firebase.initializeApp(config);
+
+seedDatabase(firebase);
 
 ReactDOM.render(
     <>

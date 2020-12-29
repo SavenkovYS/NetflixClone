@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Form } from '../components';
 import { HeaderContainer } from '../containers/Header.js'
 import { FooterContainer } from '../containers/Footer.js'
+import * as ROUTES from '../constants/routes.js'
+import { FirebaseContext } from '../context/firebase';
 
 export default function SingIn() {
+    const history = useHistory();
+    const { firebase } = useContext(FirebaseContext);
     const [error, setError] = useState('');
     const [emailAddress, setEmailAddress] = useState('');
     const [password, setPassword] = useState('');
@@ -12,6 +17,17 @@ export default function SingIn() {
 
     const handleSignIn = (event) => {
         event.preventDefault();
+
+        firebase    
+            .auth()
+            .signInWithEmailAndPassword(emailAddress, password)
+            .then(() => {
+                setEmailAddress('');
+                setPassword('');
+                setError('');
+                history.push(ROUTES.BROWSE);
+            })
+            .catch(error => setError(error.message));
     }
 
     return (
