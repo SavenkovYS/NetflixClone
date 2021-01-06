@@ -21,13 +21,14 @@ export default function SingIn() {
         firebase    
             .auth()
             .signInWithEmailAndPassword(emailAddress, password)
-            .then(() => {
-                setEmailAddress('');
-                setPassword('');
-                setError('');
+            .then(() => {           
                 history.push(ROUTES.BROWSE);
             })
-            .catch(error => setError(error.message));
+            .catch(error => {
+                setEmailAddress('');
+                setPassword('');
+                setError(error.message);
+            })
     }
 
     return (
