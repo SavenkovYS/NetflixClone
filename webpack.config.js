@@ -1,75 +1,3 @@
-// const path = require('path');
-// const webpack = require('webpack');
-// const HtmlWebpackPlugin = require('html-webpack-plugin');
-// const CopyWebpackPlugin = require('copy-webpack-plugin');
-// const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
-
-// module.exports = {
-//   plugins: [
-//     new CopyWebpackPlugin({
-//       patterns: [
-//         { from: "public", to: "public" },
-//       ],
-//     }),
-//     new webpack.HotModuleReplacementPlugin(),
-//     new HtmlWebpackPlugin({
-//         template: "./public/index.html"
-//     }),
-//     new ReactRefreshWebpackPlugin()
-//   ],
-//   entry: ['react-hot-loader/patch', './docs/index.js'],
-//   output: {
-//     path: path.resolve(__dirname, 'dist'),
-//     filename: 'bundle.js'
-//   },
-//   resolve: {
-//     alias: {
-//       'react-dom': '@hot-loader/react-dom'
-//     }
-//   },
-//   devServer: {
-//     contentBase: "./docs",
-//     open: true,
-//     clientLogLevel: 'silent',
-//     port: 9000,
-//     hot: true
-//   },
-//   module: {
-//     rules: [
-      
-//       {
-//         test: /\.(jpg|png)$/,
-//         use: {
-//           loader: 'url-loader',
-//         }
-//       },
-//       {
-//           test: /\.(png|jpg|svg|gif)$/,
-//           loader: 'file-loader',
-//           options: {
-//             publicPath: './public'
-//           }
-//       },
-//       {
-//         test: /\.(jsx|js)$/,
-//         include: path.resolve(__dirname, 'docs'),
-//         exclude: /node_modules/,
-//         use: [{
-//           loader: 'babel-loader',
-//           options: {
-//             presets: [
-//               ['@babel/preset-env', {
-//                 "targets": "defaults" 
-//               }],
-//               '@babel/preset-react'
-//             ]
-//           }
-//         }]
-//       }
-//     ]
-//   }
-// }
-
 const path = require('path')
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
@@ -154,7 +82,7 @@ const jsLoaders = () => {
 const plugins = () => {
   const base = [
     new HTMLWebpackPlugin({
-      template: './public/index.html',
+      template: './docs/index.html',
       minify: {
         collapseWhitespace: isProd
       }
