@@ -20,11 +20,11 @@ export const Column = styled.div`
 
 export const Row = styled.div`
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     grid-gap: 15px;
 
     @media (min-width: 1000px) {
-        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        grid-template-columns: repeat(4, minmax(230px, 1fr));
     }
 `;
 

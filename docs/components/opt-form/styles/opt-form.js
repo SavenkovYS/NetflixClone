@@ -12,6 +12,9 @@ export const Container = styled.section`
     @media (min-width: 1000px) {
         flex-direction: row;
         align-items: flex-start;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
     }
 `;
 
