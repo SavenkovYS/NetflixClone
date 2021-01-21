@@ -87,11 +87,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist')
   },
   resolve: {
-    extensions: ['.js', '.json', '.png'],
-    alias: {
-      '@models': path.resolve(__dirname, 'docs/models'),
-      '@': path.resolve(__dirname, 'docs'),
-    }
+    extensions: ['.js']
   },
   optimization: optimization(),
   devServer: {
