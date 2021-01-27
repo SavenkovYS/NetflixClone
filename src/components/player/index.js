@@ -27,7 +27,7 @@ Player.Video = function PlayerVideo({ ...restProps }) {
             }}>
                 <Inner>
                     <video id="netflix-player" controls>
-                        <source src="/public/videos/bunny.mp4" type="video/mp4" />
+                        <source src="public/videos/bunny.mp4" type="video/mp4" />
                     </video>
                     <Close onClick={() => setShowPlayer(false)}/>
                 </Inner>

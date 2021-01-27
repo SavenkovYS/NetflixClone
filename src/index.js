@@ -5,6 +5,7 @@ import App from './App.js';
 import { GlobalStyles } from './global-styles';
 import { FirebaseContext } from './context/firebase.js';
 
+
 const config = {
     apiKey: "AIzaSyCNQ5d0BfpML-bzEngvycxxjLxlRtlv4xU",
     authDomain: "netflixclone-f8668.firebaseapp.com",
@@ -23,8 +24,7 @@ ReactDOM.render(
         <FirebaseContext.Provider value = {{ firebase: window.firebase }}>
             <GlobalStyles />
             <App />
-        </FirebaseContext.Provider>
-        
+        </FirebaseContext.Provider>       
     </>, 
     document.getElementById('root')
 );

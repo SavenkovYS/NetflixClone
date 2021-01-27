@@ -1,5 +1,4 @@
 import React, { useState, useContext, createContext, useEffect } from 'react';
-import styled from 'styled-components';
 import { Container, Item, Inner, Title, Header, Body, Frame } from './styles/accordion.js'
 
 const ToggleContext = createContext();
@@ -37,8 +36,8 @@ Accordion.Header = function AccordionHeader({ children, ...restProps }) {
         <Header onClick={() => setToggleShow(!toggleShow)} {...restProps}>
             {children}
             {toggleShow ? 
-                <img src="/public/images/icons/close-slim.png" alt="Close" /> :
-                <img src="/public/images/icons/add.png" alt="Open" />
+                <img src="public/images/icons/close-slim.png" alt="Close" /> :
+                <img src="public/images/icons/add.png" alt="Open" />
             }
         </Header>
     )
