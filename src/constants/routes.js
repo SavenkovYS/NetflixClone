@@ -1,4 +1,4 @@
-const urlRoot = '/project-4/NetflixClone'
+const urlRoot = '/projects/NetflixClone'
 
 export const HOME = `${urlRoot}/index.html`;
 export const BROWSE = `${urlRoot}/browse`;
